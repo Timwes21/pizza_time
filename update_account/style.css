@@ -1,0 +1,76 @@
+body{
+    background-color: rgb(199, 45, 45);
+    display: flex;
+    justify-content:center;
+    align-items: center;
+    gap: 100px;
+}
+#order-info{
+    display: none;
+}
+#card-info{
+    display: none;    
+}
+img{
+    width: 20vw;
+}
+.logo{
+    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+}
+.form{
+    display: flex; 
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    background-color: rgb(0, 0, 0);
+    gap: 10px;
+    color: aliceblue;
+    padding: 20px;
+    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+}
+.form-heading{
+    margin: 0;
+    padding: 0;
+}
+.form input{
+    height: 30px;
+}
+.form .buttons{
+    display: flex;
+    gap: 10px;
+}
+.buttons button{
+    background-color: rgb(85, 85, 85);
+    color: aliceblue;
+    border: 2px solid rgb(50, 50, 50);
+    border-radius: 5px;
+}
+.error-message{
+    display: none;
+    flex-direction: column;
+}
+ul{
+    font-size: small;
+}
+li{
+    font-size:x-small;
+}
+.login, .have-account, .error-2{
+    font-size: x-small;
+}
+.underline{
+    text-decoration: underline;
+    cursor: pointer;
+}
+#login-form{
+    display: none;
+}
+.logged-in{
+    display: none;
+}
+#login-error{
+    display: none;
+}
+#username-exists-message{
+    display: none;
+}
