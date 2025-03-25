@@ -3,3 +3,11 @@
 node_modules/
 
 *.json
+
+compose.yaml
+
+Dockerfile
+
+README.Docker.md
+
+.dockerignore
