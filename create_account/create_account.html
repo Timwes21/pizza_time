@@ -16,6 +16,7 @@
         <h2 class="form-heading">Create Account</h2>
         <label for="username">Username</label>
         <input id="username" type="text">
+        <p class="error" id="username-exists-message">Username already exists</p>
         
         <label for="password">Password</label>
         <input id="password" type="text">
@@ -31,7 +32,7 @@
 
         <label for="last-name">Last Name</label>
         <input id="last-name" type="text">
-        <div class="error-message">
+        <div class="errors" id="error-message">
             <ul>
                 Username must have:
                 <li>6 characters</li>
@@ -42,11 +43,10 @@
                 <li>1 uppercase</li>
                 <li>1 special character</li>
             </ul>
-            <p class="error-2">
+            <p class="errors" id="email-phone-error">
                 Email and Phone number must be valid
             </p>
-
-            <p class="username-exists-message">Username already exists</p>
+        
                 
         </div>
         <div class="buttons">
@@ -74,7 +74,7 @@
         <label for="state">State</label>
         <input id="state" type="text">
         
-        <p id="address-error"></p>
+        <p class="errors" id="address-error"></p>
         
         <div class="buttons">
             <button id="back-to-first">Back</button>
@@ -85,11 +85,6 @@
     <div class="form" id="card-info">
         3/3
         <h2 class="form-heading">Payment Info</h2>
-        <label for="first-name">First Name</label>
-        <input id="first-name-card" type="text">
-        
-        <label for="last-name">Last Name</label>
-        <input id="last-name-card" type="text">
         
         <label for="card-number">Card Number</label>
         <input id="card-number" type="text">
@@ -103,7 +98,7 @@
         <label for="postalCode">Postal Code</label>
         <input id="postal-code" type="text">
 
-        <p id="submit-error-message"></p>
+        <p class="errors" id="submit-error-message"></p>
 
         <div class="buttons">
             <button id="back-to-second">Back</button>

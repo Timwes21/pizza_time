@@ -1,28 +1,8 @@
+import { Tracking } from "dominos";
 
-const user = {
-    card: {
-        number: "",
-        expiration: "",
-        firstName: "",
-        lastName: "",
-        postalCode: "",
-        securityCode: "",
-    }
-}
-const number = 1;
-const expiration = 2;
-const firstName = 3;
-const lastName = 4;
-const postalCode = 5;
-const cvv = 6;
-user.card = {
-    number,
-    expiration,
-    firstName,
-    lastName,
-    postalCode,
-    securityCode: cvv,
-};
+const tracking=new Tracking();
 
-console.log(user);
+const trackingResult=await tracking.byPhone('7726210972');
+
+console.dir(trackingResult,{depth:1});
 

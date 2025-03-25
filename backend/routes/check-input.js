@@ -9,7 +9,7 @@ const router = express.Router()
 router.post("/username", async (req, res)=>{
     const username = req.body.username;
     const usernameExists = await checkIfUsernameExists(username);
-    console.log(usernameExists);
+    console.log("check-input.js line 12: " + usernameExists);
     
     if(usernameExists){
         res.status(400).json({message: "Username already exists"});

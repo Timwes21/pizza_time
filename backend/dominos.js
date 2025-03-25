@@ -1,4 +1,5 @@
-import {Order,Customer,Item,Payment,NearbyStores,Tracking} from 'dominos';
+import { Order,Customer,Item,Payment,NearbyStores,Tracking } from 'dominos';
+import { decrypt } from './encryption.js';
 
 export async function checkStore(address){
     let storeID=0;
@@ -94,7 +95,7 @@ export async function order(user){
     }
     
     if(storeID==0){
-        throw ReferenceError('No Open Stores');
+        return {message : "No stores are open for delivery", status: false};
     }
     
     //console.log(storeID,distance);
@@ -130,7 +131,7 @@ export async function order(user){
             number:decrypt(user.card.number),
             
             //slashes not needed, they get filtered out
-            expiration: decrypt(user.card.exp),
+            expiration: decrypt(user.card.expiration),
             securityCode:decrypt(user.card.securityCode),
             postalCode: decrypt(user.card.postalCode),
             tipAmount: user.tipAmount
@@ -144,11 +145,12 @@ export async function order(user){
     try{
         //will throw a dominos error because
         //we used a fake credit card
+        const wait = order.estimatedWaitMinutes;
         await order.place();
     
         console.log('\n\nPlaced Order\n\n');
         console.dir(order,{depth:3});
-        return true;
+        return {message : "Pizza Ordered! Should be there in " + wait, status: true};
     
     }catch(err){
         console.trace(err);
@@ -161,6 +163,13 @@ export async function order(user){
             order.placeResponse,
             {depth:5}
         );
-        return false;
+        return {message : "Failed Order Probably Bad Card", status: false};
     }
+}
+
+
+export async function track(number){
+    const tracking=new Tracking();
+    const trackingResult=await tracking.byPhone(number);
+    return {orderStatus: trackingResult.deliveryStatus, estimatedWait: trackingResult.estimatedWaitMinutes}
 }

@@ -15,9 +15,11 @@ const validateUser = async(encryptedToken) => {
 
 export const validateTimer = async (req, res, next) => {
     const encryptedToken = req.body.token.pizzaTimeToken;
-    console.log(encryptedToken);
+    console.log("timer.js line 18: encrypted token:", encryptedToken);
     
     const user = await validateUser(encryptedToken);
+    console.log("timer.js line 21: user: ", user);
+    
     
     if (user === null){
         res.status(404).json({message: "User not found"});
@@ -25,7 +27,7 @@ export const validateTimer = async (req, res, next) => {
     }
     
     const minutesTil = calculateMinutes(user.lastOrdered);
-    console.log(minutesTil);
+
     
     if (minutesTil > 0){
         res.status(401).json({message: "Woah there fatty! Wait a full hour to order again", timerStatus: minutesTil});

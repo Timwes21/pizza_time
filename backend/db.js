@@ -19,8 +19,7 @@ export async function insertUser(user) {
 export async function findUser(token){
     const db = client.db(db_name);
     const users = db.collection("users");
-    const user = await users.findOne({token: token})
-    console.log(user);
+    const user = await users.findOne({"account.token": token})
     return user
 }
 
@@ -46,7 +45,7 @@ export async function checkIfUsernameExists(username){
     const db = client.db(db_name);
     const users = db.collection("users");
     const existedingUsers = await users.find({ username: username }).toArray();
-    console.log(existedingUsers);
+    console.log("db.js line 48" + existedingUsers.length);
     return existedingUsers.length > 0? true: false;
 }
 

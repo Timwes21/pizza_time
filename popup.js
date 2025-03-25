@@ -15,29 +15,35 @@ const checkIfLoggedIn =() =>{chrome.storage.local.get("pizzaTimeToken", (data) =
     }
 });}
 
-const orderPizza = async () => {
+const displayStatus = async(response) =>{
+    const data = await response.json();
+    // console.log(data);
     
+    let displayMessage = data.message;
+    qsDisplay("#order-display", "none");
+        
+    if (response.status===200){
+        chrome.storage.local.set({pizzaTimeToken: data.newToken});
+    }
+    else if(response.status===401){
+        displayMessage += "\n Time Left: " + (data.timerStatus) + " minutes";    
+    }
+    qs("#message").innerText = displayMessage;
+}
+
+
+const orderPizza = async () => {
     const tip = qsValue("#tip-amount") === ""?  0:qsValue("#tip-amount");
     fetch(orderApi, {
         method: "POST",
         headers: {"Content-Type": "application/json"},
         body: JSON.stringify({tip: tip, token: await chrome.storage.local.get("pizzaTimeToken")})
     }).then(async (response) => {
-        const data = await response.json();
-        console.log(data.timerStatus);
-        
-        if (response.status===200){
-            console.log('here');
-            chrome.storage.local.set({pizzaTimeToken: data.newToken});
-            qs("#message").innerText = data.message;
-        }
-        if (response.status===401){
-            console.log(data);
-            qsDisplay("#order-display", "none");
-            qs("#message").innerText = data.message + "\n Time Left: " + (data.timerStatus) + " minutes";    
-        }
+        displayStatus(response);
     }).catch((err) => {
         console.log(err);
+        qs("#message").innerText = "An error occurred";
+        qsDisplay("#order-display", "none");
     });
 };
 
@@ -50,7 +56,7 @@ const logOut = () =>{
 };
 
 const updateUserInfo = ()=> chrome.tabs.create({ url: "/create_account/create_account.html" });
-const login = ()=> chrome.tabs.create({ url: "/create_account/create_account.html" });
+const login = () => chrome.tabs.create({ url: "/create_account/create_account.html" });
     
 const initEventListeners = () =>{
     qs("#order-button").addEventListener("click", orderPizza);    

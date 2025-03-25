@@ -98,15 +98,12 @@ function firstNext(){
         method: "POST",
         headers: {"Content-Type": "application/json"},
         body: JSON.stringify({username: username})
-    }).then(response => response.json())
-    .then((data)=>{
-        console.log(data);
-        
-        if (data.status === 400 ){
-            qs(".username-exists-message").style.display = "block";
+    }).then((response) => {
+        if (response.status===400){
+            qs("#username-exists-message").style.display = "block";
         }
         else if (validateUsername(username) && validatePassword(password) && validateEmail(email) && validatePhoneNumber(phone) && firstName && lastName){
-            qs(".error-message").style.display = "none";
+            qs("#error-message").style.display = "none";
             
             user.account = {
                 username,
