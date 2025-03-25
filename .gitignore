@@ -6,6 +6,8 @@ node_modules/
 
 compose.yaml
 
+compose.yml
+
 Dockerfile
 
 README.Docker.md
