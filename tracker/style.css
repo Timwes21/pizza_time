@@ -1,0 +1,28 @@
+body{
+    background-color: rgb(211, 38, 38);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-color: red;
+    flex-direction: column;
+    margin: 0;
+    padding: 0;
+}
+h4{
+    position:static;
+    margin: 0;
+}
+.tracking{
+    width: 60%;
+    height: 60%;
+    background-color: rgb(31, 31, 31);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 0;
+}
+p{
+    color: rgb(0, 206, 14);
+    font-size:medium;
+    
+}

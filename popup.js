@@ -15,15 +15,25 @@ const checkIfLoggedIn =() =>{chrome.storage.local.get("pizzaTimeToken", (data) =
     }
 });}
 
+const popupTracker = () => {
+    chrome.windows.create({
+        url: "/tracker/tracking.html",
+        type: "popup",
+        width: 200,
+        height: 100,
+    })
+}
+
 const displayStatus = async(response) =>{
     const data = await response.json();
     // console.log(data);
-    
     let displayMessage = data.message;
     qsDisplay("#order-display", "none");
-        
+    popupTracker();
+    
     if (response.status===200){
         chrome.storage.local.set({pizzaTimeToken: data.newToken});
+
     }
     else if(response.status===401){
         displayMessage += "\n Time Left: " + (data.timerStatus) + " minutes";    
@@ -42,7 +52,7 @@ const orderPizza = async () => {
         displayStatus(response);
     }).catch((err) => {
         console.log(err);
-        qs("#message").innerText = "An error occurred";
+        qs("#message").innerText = err;
         qsDisplay("#order-display", "none");
     });
 };
@@ -55,8 +65,8 @@ const logOut = () =>{
     qsDisplay(".order", "none");
 };
 
-const updateUserInfo = ()=> chrome.tabs.create({ url: "/create_account/create_account.html" });
-const login = () => chrome.tabs.create({ url: "/create_account/create_account.html" });
+const updateUserInfo = ()=> chrome.tabs.create({ url: "account-management/update_account/update_account.html" });
+const login = () => chrome.tabs.create({ url: "account-management/create_account/create_account.html" });
     
 const initEventListeners = () =>{
     qs("#order-button").addEventListener("click", orderPizza);    

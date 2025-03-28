@@ -95,7 +95,7 @@ export async function order(user){
     }
     
     if(storeID==0){
-        return {message : "No stores are open for delivery", status: false};
+        throw new Error("No stores are open for delivery")
     }
     
     //console.log(storeID,distance);
@@ -145,25 +145,28 @@ export async function order(user){
     try{
         //will throw a dominos error because
         //we used a fake credit card
+        console.log("made it to line 148");
+        
         const wait = order.estimatedWaitMinutes;
         await order.place();
+
+        
     
         console.log('\n\nPlaced Order\n\n');
         console.dir(order,{depth:3});
-        return {message : "Pizza Ordered! Should be there in " + wait, status: true};
+        return "Pizza Ordered! Should be there in " + wait;
     
     }catch(err){
-        console.trace(err);
-    
+        // console.trace(err);
+        
         //inspect Order Response to see more information about the 
         //failure, unless you added a real card, then you can inspect
         //the order itself
-        console.log('\n\nFailed Order Probably Bad Card, here is order.priceResponse the raw response from Dominos\n\n');
-        console.dir(
-            order.placeResponse,
-            {depth:5}
-        );
-        return {message : "Failed Order Probably Bad Card", status: false};
+        // console.dir(
+            // order.placeResponse,
+            // {depth:5}
+        // );
+        throw new Error("Failed Order Probably Bad Card")
     }
 }
 

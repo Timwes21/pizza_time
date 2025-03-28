@@ -1,5 +1,6 @@
 import { MongoClient } from "mongodb";
 import dotenv from 'dotenv';
+import { encrypt, decrypt } from "./encryption.js";
 dotenv.config();
 
 
@@ -9,6 +10,8 @@ const client = new MongoClient(process.env.MONGO_URL, {
   useUnifiedTopology: true,
 });
 
+const initToken =(receivedToken) => receivedToken.length > 128?decrypt(receivedToken): receivedToken;
+
 export async function insertUser(user) {
     const db = client.db(db_name);
     const collection = db.collection("users");
@@ -16,20 +19,25 @@ export async function insertUser(user) {
     console.log(`${result.insertedCount} user added`);
 }
 
-export async function findUser(token){
+export async function findUser(receivedToken){
+    const token = initToken(receivedToken);
     const db = client.db(db_name);
     const users = db.collection("users");
-    const user = await users.findOne({"account.token": token})
-    return user
+    const user = await users.findOne({"user.account.token": token });
+    return user;
 }
 
 export async function updateAfterOrder(oldToken, newToken, lastOrdered){
     const db = client.db(db_name);
     const users = db.collection("users");
+    console.log("old: ", oldToken);
+    console.log("new: ", newToken);
+    
+    
 
     const result = await users.updateOne(
-        { token: oldToken }, 
-        { $set: { lastOrdered: lastOrdered, token: newToken} } 
+        { "user.account.token": oldToken }, 
+        { $set: { "user.account.lastOrdered": lastOrdered, "user.account.token": newToken} } 
     );
     return result.acknowledged;
 }
@@ -37,16 +45,27 @@ export async function updateAfterOrder(oldToken, newToken, lastOrdered){
 export async function Authenticate(username, password){
     const db = client.db(db_name);
     const users = db.collection("users");
-    const user = await users.findOne({username: username, password: password});
+    const user = await users.findOne({"user.account.username": username, "user.account.password": encrypt(password)});
     return user? user.token: null;
 }
 
 export async function checkIfUsernameExists(username){
     const db = client.db(db_name);
     const users = db.collection("users");
-    const existedingUsers = await users.find({ username: username }).toArray();
-    console.log("db.js line 48" + existedingUsers.length);
-    return existedingUsers.length > 0? true: false;
+    const existingUsers = await users.find({ "user.account.username": username }).toArray();
+    console.log("db.js line 48" + existingUsers.length);
+    return existingUsers.length > 0
+}
+
+export async function updateUser(userToUpdate){
+    const db = client.db(db_name);
+    const users = db.collection("users");
+    
+    const result = await users.updateOne(
+        { "user.account.token": userToUpdate.account.token }, 
+        { $set: { user: userToUpdate } } 
+    );
+    return result.acknowledged;
 }
 
 

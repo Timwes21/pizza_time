@@ -1,11 +1,11 @@
-const base = "http://localhost:3000"
-const testApi = base + "/test"
-const createUserApi = base + "/create-account"
-const hasStoreNearbyApi = base + "/check-address"
-const loginApi = base + "/login";
-const checkUsernameApi = base + "/check-username"
+const base = "http://localhost:3000";
+const testApi = base + "/test";
+const createUserApi = base + "/auth/account";
+const hasStoreNearbyApi = base + "/check/address";
+const loginApi = base + "auth/login";
+const checkUsernameApi = base + "/check/username";
 
-const qs = (element) => document.querySelector(element)
+const qs = (element) => document.querySelector(element);
 const qsValue = (element) => qs(element).value;
 
 const credentialForm = qs("#credentials");
@@ -15,10 +15,12 @@ const loginForm = qs("#login-form");
 
 
 const user = {
-    username: "",
-    password: "",
-    token: "",
-    lastOrdered: "",
+    account: {
+        username: "",
+        password: "",
+        token: "",
+        lastOrdered: "",
+    },
     customer: {
         address: "",
         firstName: "",
@@ -26,23 +28,18 @@ const user = {
         phone: "",
         email: ""
     },
-    card: {
-        amount:"",
-        
-        // dashes are not needed, they get filtered out
-        number: "",
-        
-        //slashes not needed, they get filtered out
+    card: {        
+        number: "",        
         expiration:"",
         postalCode:"",
         securityCode: "",
-        tipAmount: ""
-    }
+    },
+    tipAmount: ""
 }
 
-function changeForm(form1, form2){
-    form1.style.display = "none"
-    form2.style.display = "flex"
+const changeForm = (form1, form2) =>{
+    form1.style.display = "none";
+    form2.style.display = "flex";
 }
 
 function validateUsername(username){
@@ -57,25 +54,25 @@ function validateUsername(username){
         return false;
     }
 
-    return true
+    return true;
 
 }
 
 function validatePassword(password){
-    const min = 8
+    const min = 8;
     const upperCase = /[A-Z]/.test(password);
     const lowerCase = /[a-z]/.test(password);
     const digit = /[0-9]/.test(password);
     const specialChars = /[!@#$%^&*]/.test(password);
 
     if (password.length < 8){
-        return false
+        return false;
     }
     if (!upperCase || !lowerCase || !digit || !specialChars){
-        return false
+        return false;
     }
 
-    return true
+    return true;
 }
 
 function validateEmail(email){
@@ -93,30 +90,34 @@ function firstNext(){
     let username = qsValue("#username");
     let password = qsValue("#password");
     let email = qsValue("#email");
-    let phoneNumber = qsValue("#phone-number");
+    let phone = qsValue("#phone-number");
     let firstName = qsValue("#first-name");
     let lastName = qsValue("#last-name");
-    console.log("exists");
     
     fetch(checkUsernameApi, {
         method: "POST",
         headers: {"Content-Type": "application/json"},
         body: JSON.stringify({username: username})
-    }).then(response => response.json())
-    .then((data)=>{
-        console.log(data);
-        
-        if (data.status === 400 ){
-            qs(".username-exists-message").style.display = "block";
+    }).then((response) => {
+        if (response.status===400){
+            qs("#username-exists-message").style.display = "block";
         }
-        else if (validateUsername(username) && validatePassword(password) && validateEmail(email) && validatePhoneNumber(phoneNumber) && firstName && lastName){
-            qs(".error-message").style.display = "none";
-            user.username = username;
-            user.password = password;
-            user.customer.email = email;
-            user.customer.phone = phoneNumber;
-            user.customer.firstName = firstName;
-            user.customer.lastName = lastName;
+        else if (validateUsername(username) && validatePassword(password) && validateEmail(email) && validatePhoneNumber(phone) && firstName && lastName){
+            qs("#error-message").style.display = "none";
+            
+            user.account = {
+                username,
+                password,
+                token: "",
+                lastOrdered: ""
+            }
+            user.customer = {
+                address: "",
+                firstName,
+                lastName,
+                phone,
+                email
+            }
             changeForm(credentialForm, orderInfoForm);
         }
         else{
@@ -124,18 +125,18 @@ function firstNext(){
         }
     })
     .catch((err)=>{
-        console.log(err);
+        console.log("error: ",err);
     });
     
 
 }
 
 function secondNext(){
-    let street = qsValue("#street")
-    let city = qsValue("#city")
-    let zipCode = qsValue("#zipCode")
-    let state = qsValue("#state")
-    const address = `${street}, ${city}, ${state}, ${zipCode}`
+    let street = qsValue("#street");
+    let city = qsValue("#city");
+    let zipCode = qsValue("#zipCode");
+    let state = qsValue("#state");
+    const address = `${street}, ${city}, ${state}, ${zipCode}`;
     fetch(hasStoreNearbyApi, {
         method: "POST",
         headers: {"Content-Type": "application/json"},
@@ -143,12 +144,12 @@ function secondNext(){
     }).then(response => response.json())
     .then(data => {
         if (data.results === 1){
-            user.address = address;
+            user.customer.address = address;
             changeForm(orderInfoForm, cardInfoForm);
         }
         else{
             console.log(data);
-            qs("#address-error").innerText = "No store near your address. Check to see if there is a typo."
+            qs("#address-error").innerText = "No store near your address. Check to see if there is a typo.";
         }
     })
     .catch((err) =>{
@@ -158,16 +159,24 @@ function secondNext(){
     
 }
 
-
 function submit(){
-    user.card.number = qsValue("#card-number");
-    user.card.expiration = qsValue("#exp");
-    user.card.firstName = qsValue("#first-name-card");
-    user.card.lastName = qsValue("#last-name-card");
-    user.card.postalCode = qsValue("#postal-code");
-    user.card.securityCode = qsValue("#cvv");
+    const number = qsValue("#card-number");
+    const expiration = qsValue("#exp");
+    const postalCode = qsValue("#postal-code");
+    const securityCode = qsValue("#cvv");
 
-    
+    const result = validateCard(number, expiration, postalCode, securityCode)
+    if (!result){
+        qs("#submit-error-message").innerText = "Improper Card Format";
+        return;
+    }
+
+    user.card = {
+        number, 
+        expiration,
+        postalCode,
+        securityCode
+    }
     fetch(createUserApi, {
         method: "POST",
         headers: {"Content-Type": "application/json"},
@@ -186,6 +195,25 @@ function submit(){
     });
 }
 
+const createAccountButton = () => changeForm(loginForm, credentialForm);
+
+
+const backToFirst = () => changeForm(orderInfoForm, credentialForm);
+const backToSecond = ()=> changeForm(cardInfoForm, orderInfoForm);
+
+const initEventListeners = () => {
+    qs("#first-next").addEventListener("click", firstNext);
+    qs("#second-next").addEventListener("click", secondNext);
+    qs("#submit").addEventListener("click", submit);
+    qs("#back-to-first").addEventListener("click", backToFirst);
+    qs("#back-to-second").addEventListener("click", backToSecond);
+}
+
+initEventListeners();
+const loginButton = () => changeForm(credentialForm, loginForm);
+qs("#login-submit").addEventListener("click", login);
+qs("#create-an-account").addEventListener("click", createAccountButton);
+qs("#login-button").addEventListener("click", loginButton);
 function login(){
     const username = qsValue("#login-username");
     const password = qsValue("#login-password");
@@ -197,7 +225,7 @@ function login(){
             body: JSON.stringify({username: username, password: password})
         }).then(response => response.json())
     .then(data => {
-        chrome.storage.local.set({pizzaTimeToken: data.token})
+        chrome.storage.local.set({pizzaTimeToken: data.token});
         chrome.tabs.getCurrent(tab => chrome.tabs.remove(tab.id));
         
     })
@@ -207,19 +235,3 @@ function login(){
     })
 }
 }
-
-
-const backToFirst = () => changeForm(orderInfoForm, credentialForm);
-const backToSecond = ()=> changeForm(cardInfoForm, orderInfoForm);
-const loginButton = () => changeForm(credentialForm, loginForm);
-const createAccountButton = () => changeForm(loginForm, credentialForm);
-
-
-qs("#first-next").addEventListener("click", firstNext);
-qs("#second-next").addEventListener("click", secondNext);
-qs("#submit").addEventListener("click", submit);
-qs("#back-to-first").addEventListener("click", backToFirst);
-qs("#back-to-second").addEventListener("click", backToSecond);
-qs("#login-button").addEventListener("click", loginButton);
-qs("#login-submit").addEventListener("click", login);
-qs("#create-an-account").addEventListener("click", createAccountButton);

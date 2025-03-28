@@ -24,3 +24,5 @@ export function decrypt(text){
 
 export const getToken = () => crypto.randomBytes(64).toString('hex');
 
+export const getEncryptedToken = () => encrypt(crypto.randomBytes(64).toString('hex'));
+

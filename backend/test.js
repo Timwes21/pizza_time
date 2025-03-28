@@ -1,8 +1,7 @@
-import { Tracking } from "dominos";
+const store = 5124
 
-const tracking=new Tracking();
+import {Menu} from 'dominos';
 
-const trackingResult=await tracking.byPhone('7726210972');
+const menu=await new Menu(store);
 
-console.dir(trackingResult,{depth:1});
-
+console.dir(menu,{depth:2});

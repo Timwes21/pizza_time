@@ -9,7 +9,7 @@
 <body>
     <div class="logo">
         <h1>Pizza Time!</h1>
-        <img src="icon.png" alt="">
+        <!-- <img src="icon.png" alt=""> -->
     </div>
     <div class="form" id="credentials">
         1/3
@@ -31,7 +31,7 @@
 
         <label for="last-name">Last Name</label>
         <input id="last-name" type="text">
-        <div class="error-message">
+        <div id="error-message">
             <ul>
                 Username must have:
                 <li>6 characters</li>
@@ -52,10 +52,6 @@
         <div class="buttons">
             <button id="first-next">Next</button>
         </div>
-
-        <div class="login">
-            <p>Already Have an account? <span id="login-button" class="underline">Log in</span></p>
-        </div>
         
     </div>
     <div id="order-info" class="form">
@@ -68,8 +64,8 @@
         <label for="city">City</label>
         <input id="city" type="text">
         
-        <label for="zipCode">Zip Code</label>
-        <input id="zipCode" type="text">
+        <label for="zip">Zip Code</label>
+        <input id="zip" type="text">
         
         <label for="state">State</label>
         <input id="state" type="text">
@@ -85,17 +81,14 @@
     <div class="form" id="card-info">
         3/3
         <h2 class="form-heading">Payment Info</h2>
-        <label for="first-name">First Name</label>
-        <input id="first-name-card" type="text">
-        
-        <label for="last-name">Last Name</label>
-        <input id="last-name-card" type="text">
-        
         <label for="card-number">Card Number</label>
         <input id="card-number" type="text">
         
         <label for="exp">Expiration Date</label>
         <input id="exp" type="text">
+
+        <label for="cvv">Security Code</label>
+        <input id="cvv" type="text">
         
         <label for="postalCode">Postal Code</label>
         <input id="postal-code" type="text">
@@ -112,24 +105,6 @@
         <h2>You are logged in!</h2>
     </div>
 
-    <div class="form" id="login-form">
-        <label for="username">Username</label>
-        <input id="login-username" type="text">
-
-        <label for="password">Password</label>
-        <input id="login-password" type="text">
-
-        <p id="login-error">Must Type in credentials</p>
-
-        <div class="buttons">
-            <button id="login-submit">Submit</button>
-        </div>
-
-        <div class="have-account">
-            <p>Don't have an account? <span id="create-an-account" class="underline">Create Account</span></p>
-        </div>
-    </div>
-
-    <script src="createAccount.js"></script>
+    <script src="updateAccount.js" type="module"></script>
 </body>
 </html>
