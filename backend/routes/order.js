@@ -11,9 +11,7 @@ const router = express.Router();
 const changeToken = async(newToken, user)=>{
     const lastOrdered = Date.now();
     const oldToken = user.account.token;
-    // console.log("order.js line 14: ", oldToken);
     await updateAfterOrder(oldToken, newToken, lastOrdered);
-    // console.log("here");
     
     return encrypt(newToken);
 }
@@ -36,14 +34,12 @@ router.post("/tracker", async(req, res)=>{
     
     const user = await findUser(token);
     const number = user.user.customer.phone
-    console.log("number: ", number);
     
     try{
         const results = await track(number);
         res.status(200).json(results);
     }
     catch(error){
-        console.log(error);
         res.status(500).json(error);
         
     }

@@ -1,7 +1,6 @@
 import { qs, qsValue, validateEmail, validatePassword, validatePhoneNumber, validateUsername, changeForm, validateCard } from "../helper.js";
+const base = "https://backend-server-production-1643.up.railway.app"
 
-
-const base = "http://localhost:3000";
 const userInfoApi = base + "/auth/user-info";
 const updateUserApi = base + "/auth/update";
 const hasStoreNearbyApi = base + "/check/address";

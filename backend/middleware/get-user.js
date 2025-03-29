@@ -14,8 +14,6 @@ export const setUpUser = (req, res, next) => {
     const user = req.body.user;
     const password = user.account.password;
     user.account.password = encrypt(password);
-    console.log('here');
-    
     user.account.token = user.account.token? user.account.token:getToken();
     user.card = encryptCard(user.card);
     req.user = user;

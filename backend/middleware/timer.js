@@ -9,10 +9,7 @@ const calculateMinutes=(lastOrdered)=>{
 
 export const validateTimer = async (req, res, next) => {
     const token = req.body.token.pizzaTimeToken;
-    console.log("timer.js line 12: encrypted token:", token);
-    
     const user = await findUser(token);
-    // console.log("timer.js line 15: user: ", user);
     
     
     if (user === null){
@@ -21,7 +18,6 @@ export const validateTimer = async (req, res, next) => {
     }
     
     const minutesTil = calculateMinutes(user.user.account.lastOrdered);
-    // console.log(minutesTil);
     
     
     if (minutesTil > 0){

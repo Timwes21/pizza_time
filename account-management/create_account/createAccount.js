@@ -1,4 +1,4 @@
-const base = "http://localhost:3000";
+const base = "https://backend-server-production-1643.up.railway.app"
 const testApi = base + "/test";
 const createUserApi = base + "/auth/account";
 const hasStoreNearbyApi = base + "/check/address";

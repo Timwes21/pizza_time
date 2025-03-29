@@ -1,7 +1,7 @@
 
-
-const testApi = "http://localhost:3000/test";
-const orderApi = "http://localhost:3000/order/pizza";
+const base = "https://backend-server-production-1643.up.railway.app"
+const testApi = base + "/test";
+const orderApi = base + "/order/pizza";
     
     
 const qs = (e) => document.querySelector(e);
@@ -26,12 +26,11 @@ const popupTracker = () => {
 
 const displayStatus = async(response) =>{
     const data = await response.json();
-    // console.log(data);
     let displayMessage = data.message;
     qsDisplay("#order-display", "none");
-    popupTracker();
     
     if (response.status===200){
+        popupTracker();
         chrome.storage.local.set({pizzaTimeToken: data.newToken});
 
     }
@@ -51,7 +50,6 @@ const orderPizza = async () => {
     }).then(async (response) => {
         displayStatus(response);
     }).catch((err) => {
-        console.log(err);
         qs("#message").innerText = err;
         qsDisplay("#order-display", "none");
     });
