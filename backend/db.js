@@ -1,7 +1,5 @@
 import { MongoClient } from "mongodb";
-import dotenv from 'dotenv';
 import { encrypt, decrypt } from "./encryption.js";
-dotenv.config();
 
 
 const db_name = "test"
@@ -16,7 +14,6 @@ export async function insertUser(user) {
     const db = client.db(db_name);
     const collection = db.collection("users");
     const result = await collection.insertOne(user);
-    console.log(`${result.insertedCount} user added`);
 }
 
 export async function findUser(receivedToken){
@@ -30,8 +27,6 @@ export async function findUser(receivedToken){
 export async function updateAfterOrder(oldToken, newToken, lastOrdered){
     const db = client.db(db_name);
     const users = db.collection("users");
-    console.log("old: ", oldToken);
-    console.log("new: ", newToken);
     
     
 
@@ -53,7 +48,6 @@ export async function checkIfUsernameExists(username){
     const db = client.db(db_name);
     const users = db.collection("users");
     const existingUsers = await users.find({ "user.account.username": username }).toArray();
-    console.log("db.js line 48" + existingUsers.length);
     return existingUsers.length > 0
 }
 

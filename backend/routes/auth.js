@@ -40,7 +40,6 @@ router.post("/update", setUpUser, async(req, res)=>{
         res.sendStatus(200);
     }
     catch(err){
-        console.log("auth.js line 45: error: ", err);
         res.status(500).send(err);
         
     }

@@ -25,8 +25,6 @@ app.use(cors({
 
 
 wss.on('connection', (ws) => {
-    console.log('Client connected');
-
     ws.on('message', async(bufferedToken) => {
         try{
             const token = bufferedToken.toString()
