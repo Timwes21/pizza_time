@@ -4,7 +4,7 @@
 A chrome extension for ordering a large pepperoni pizza with the click of a button.
 
 ## Usage Instructions
-### From the Chrome Store
+### From the Chrome Store (Still Pending Review)
 1. Download from the [Chrome Web Store](http://chrome.google.com/webstore).
 
 2. Upon download, a create account form should open in a new tab.
